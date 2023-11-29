@@ -1,0 +1,76 @@
+body {
+    top: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    background-color: black;
+    color: greenyellow;
+    height: 100vh;
+}
+
+a {
+    color: greenyellow;
+}
+
+b {
+    padding-bottom: 10px;
+    border-bottom: 2px solid green;
+}
+
+form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    border: 2px solid green;
+    width: 350px;
+    padding: 10px;
+}
+
+.hide {
+    display: none;
+}
+
+.button {
+    background: none;
+    border: 2px solid green;
+    color: greenyellow;
+    width: auto;
+    padding: 5px;
+}
+
+.uploaded-url {
+    width: 100%;
+    line-break: anywhere;
+}
+
+.htmx-indicator {
+    display: none;
+}
+
+.htmx-request .htmx-indicator {
+    display: block;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGFiles</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
+    <link rel="stylesheet" href="css/modern-normalize.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/htmx.min.js"></script>
+    <script src="js/htmx.better-indicators.js"></script>
+</head>
+
+<body>
+    <div class="dialog">
+        <b>TGFiles</b>
+        <span>Free and anonymous small file storage (~50MB), using a private Telegram Channel as storage.</span>
+        <form hx-ext="better-indicators" hx-post="/upload" hx-target=".uploaded-url" hx-swap="outerHTML"
+            hx-encoding="multipart/form-data">
+            <input id="file" name="file" type="file" class="hide">
+            <button id="submit" type="submit" class="hide"></button>
+            <label for="file" class="button">Select...</label>
+            <label for="submit" class="button">Upload</label>
+            <span class="htmx-indicator">Uploading...</span>
+            <span class="htmx-error-indicator">Upload Error</span>
+            <span class="htmx-done-indicator">Completed</span>
+        </form>
+        <span>URL: <a href="#" target="_blank" class="uploaded-url"></a></span>
+    </div>
+    <div class="dialog">
+        <div>
+            <a id="" href="/docs">Api</a>
+            <span>-</span>
+            <a href="https://github.com/el-garro/tgfiles" target="_blank">Source</a>
+        </div>
+    </div>
+</body>
+
+</html>
