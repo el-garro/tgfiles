@@ -29,7 +29,7 @@ async def upload_file(file: UploadFile, request: Request):
     url = f"{config.URL}/file/{encode_file_id(config.TG_CHANNEL_ID, file_id)}"
 
     if request.headers.get("hx-request") == "true":
-        return HTMLResponse(f'<a href="{url}" target="_blank" class="uploaded-url">{url}</a>')
+        return HTMLResponse(f'<a href="{url}" target="_blank" class="uploaded-url htmx-done-indicator">{url}</a>')
     else:
         return {"url": url}
 
