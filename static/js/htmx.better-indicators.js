@@ -15,7 +15,7 @@ htmx.defineExtension('better-indicators', {
             evt.detail.elt.classList.remove("htmx-done");
         }
 
-        if (name === "htmx:responseError" || name === "htmx:sendError") {
+        if (name === "htmx:responseError" || name === "htmx:sendError" || name === "htmx:error") {
             evt.detail.elt.classList.add("htmx-error");
         }
 
