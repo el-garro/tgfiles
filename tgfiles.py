@@ -44,6 +44,7 @@ class tgFiles:
         upload_payload = FormData()
         upload_payload.add_field("chat_id", str(channel_id))
         upload_payload.add_field("caption", filename)
+        upload_payload.add_field("disable_content_type_detection", "true")
         upload_payload.add_field("document", value=file, filename=filename)
         upload_message = await self._api_call("sendDocument", upload_payload)
 
