@@ -20,10 +20,6 @@ class tgFiles:
         else:
             raise Exception(response)
 
-    async def check_config(self):
-        print("Bot token:", self.bot_token)
-        print(await self._api_call("getMe"))
-
     async def get_message(self, channel_id: int, message_id: int):
         reply_markup = {
             "inline_keyboard": [
@@ -57,7 +53,6 @@ class tgFiles:
 
     async def get_file_data(self, channel_id: int, message_id: int):
         message = await self.get_message(channel_id, message_id)
-        print(message)
         file_id = message["document"]["file_id"]
         file_name = message["document"]["file_name"]
         mime_type = message["document"].get("mime_type", "application/octet-stream")
