@@ -48,6 +48,11 @@ form {
 }
 
 .uploaded-url {
+    display: none;
+}
+
+.htmx-done+span .uploaded-url {
+    display: inline;
     width: 100%;
     line-break: anywhere;
 }
