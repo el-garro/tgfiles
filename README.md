@@ -1,4 +1,4 @@
-## TGFiles
+# TGFiles
 
 Simple web and API to use a private Telegram channel as a small file storage
 
