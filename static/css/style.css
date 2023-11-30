@@ -7,7 +7,7 @@ body {
     gap: 1.5rem;
     background-color: black;
     color: greenyellow;
-    height: 100vh;
+    height: 100dvh;
 }
 
 a {
