@@ -45,6 +45,7 @@ form {
     color: greenyellow;
     width: auto;
     padding: 5px;
+    user-select: none;
 }
 
 .htmx-request .button {

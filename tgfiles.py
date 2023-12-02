@@ -6,7 +6,7 @@ import pyaes
 from hashlib import sha256
 
 
-class tgFiles:
+class TGFiles:
     def __init__(self, bot_token: str) -> None:
         self.bot_token: str = bot_token
 

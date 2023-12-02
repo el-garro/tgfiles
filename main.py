@@ -1,3 +1,4 @@
+from typing import AsyncGenerator
 from aiohttp import ClientSession
 
 from fastapi import FastAPI, HTTPException, Query, Request, UploadFile
@@ -5,7 +6,7 @@ from fastapi.responses import StreamingResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 import config
-from tgfiles import tgFiles
+from tgfiles import TGFiles
 from urllib.parse import quote
 
 
@@ -14,7 +15,7 @@ app = FastAPI(
     redoc_url=None,
     swagger_ui_parameters={"defaultModelsExpandDepth": -1},
 )
-storage = tgFiles(config.TG_BOT_TOKEN)
+storage = TGFiles(config.TG_BOT_TOKEN)
 
 
 @app.post("/upload", response_class=JSONResponse, tags=["Functions"])
@@ -50,7 +51,7 @@ async def download_file(file_name: str, key: str = Query()):
 app.mount("/", StaticFiles(directory="static", html=True))
 
 
-async def file_stream(url: str):
+async def file_stream(url: str) -> AsyncGenerator:
     async with ClientSession() as session:
         async with session.get(url) as resp:
             async for chunk in resp.content.iter_any():
