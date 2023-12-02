@@ -1,8 +1,9 @@
-import json
-from random import randbytes
+import base64
 from typing import BinaryIO
 from aiohttp import ClientSession
 from aiohttp import FormData
+import pyaes
+from hashlib import sha256
 
 
 class tgFiles:
@@ -20,51 +21,43 @@ class tgFiles:
         else:
             raise Exception(response)
 
-    async def get_message(self, channel_id: int, message_id: int):
-        reply_markup = {
-            "inline_keyboard": [
-                [
-                    {
-                        "text": f"{channel_id}:{message_id}",
-                        "callback_data": randbytes(8).hex(),
-                    },
-                ]
-            ]
-        }
-
-        payload = {
-            "chat_id": channel_id,
-            "message_id": message_id,
-            "reply_markup": json.dumps(reply_markup),
-        }
-
-        return await self._api_call("editMessageReplyMarkup", payload)
-
-    async def upload(self, channel_id: int, file: BinaryIO, filename) -> int:
+    async def upload(self, channel_id: int, file: BinaryIO, file_name) -> str:
         upload_payload = FormData()
         upload_payload.add_field("chat_id", str(channel_id))
-        upload_payload.add_field("caption", filename)
         upload_payload.add_field("disable_content_type_detection", "true")
-        upload_payload.add_field("document", value=file, filename=filename)
+        upload_payload.add_field("document", value=file, filename=file_name)
         upload_message = await self._api_call("sendDocument", upload_payload)
 
-        upload_message_id = upload_message["message_id"]
-        final_message = await self.get_message(channel_id, upload_message_id)
-        return final_message["message_id"]
+        message_id = upload_message["message_id"]
+        file_id = upload_message["document"]["file_id"]
+        url_key = self._encode_file_id(file_id)
+        caption = (
+            f"chat_id: {channel_id}\n\n"
+            + f"message_id: {message_id}\n\n"
+            + f"file_id: {file_id}\n\n"
+            + f"url_key: {url_key}"
+        )
 
-    async def get_file_data(self, channel_id: int, message_id: int):
-        message = await self.get_message(channel_id, message_id)
-        file_id = message["document"]["file_id"]
-        file_name = message["document"]["file_name"]
-        mime_type = message["document"].get("mime_type", "application/octet-stream")
-        file_size = message["document"]["file_size"]
-
-        file = await self._api_call("getFile", {"file_id": file_id})
-        file_path = file["file_path"]
-        response = {
-            "file_name": file_name,
-            "mime_type": mime_type,
-            "file_size": file_size,
-            "url": f"https://api.telegram.org/file/bot{self.bot_token}/{file_path}",
+        edit_payload = {
+            "chat_id": channel_id,
+            "message_id": upload_message["message_id"],
+            "caption": caption,
         }
-        return response
+
+        await self._api_call("editMessageCaption", edit_payload)
+        return url_key
+
+    async def get_file_data(self, file_id: str) -> dict:
+        file = await self._api_call("getFile", {"file_id": file_id})
+        file["url"] = f"https://api.telegram.org/file/bot{self.bot_token}/{file['file_path']}"
+        return file
+
+    def _encode_file_id(self, file_id) -> str:
+        aes = pyaes.AESModeOfOperationCTR(sha256(self.bot_token.encode()).digest())
+        file_id_encoded = aes.encrypt(file_id)
+        return base64.urlsafe_b64encode(file_id_encoded).decode()
+
+    def _decode_file_id(self, file_id_encoded) -> str:
+        aes = pyaes.AESModeOfOperationCTR(sha256(self.bot_token.encode()).digest())
+        file_id = aes.decrypt(base64.urlsafe_b64decode(file_id_encoded)).decode()
+        return file_id

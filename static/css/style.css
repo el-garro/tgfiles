@@ -47,6 +47,12 @@ form {
     padding: 5px;
 }
 
+.htmx-request .button {
+    pointer-events: none;
+    color: gray;
+}
+
+
 .uploaded-url {
     display: none;
 }
